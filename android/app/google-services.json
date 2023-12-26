@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "622012000537",
+    "project_id": "artlasflutter",
+    "storage_bucket": "artlasflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622012000537:android:032efe5b7f4e9ec3e63d88",
+        "android_client_info": {
+          "package_name": "com.inselisland.artlas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622012000537-6lffjloi46fsshvs5hd4mk1l83ecv2vu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inselisland.artlas",
+            "certificate_hash": "f6e9bae466a408e8e902d22025031da4c4c73ac4"
+          }
+        },
+        {
+          "client_id": "622012000537-6tb5mk6686d7d3o3ahiqepcjbont73f0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwWkSlsoDAJkI8StRDNNT3dJuXVfEPQEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622012000537-6tb5mk6686d7d3o3ahiqepcjbont73f0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "622012000537-a2j63j1uhd4a2bbsckb48bqpo87nvmcc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "coms.inselisland.altlas"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
