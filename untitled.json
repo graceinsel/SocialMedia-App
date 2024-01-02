@@ -1,0 +1,142 @@
+Running Xcode build...
+Xcode build done.                                           40.8s
+[ERROR:flutter/shell/platform/darwin/graphics/FlutterDarwinContextMetalImpeller.mm(42)] Using the Impeller rendering backend.
+Debug service listening on ws://127.0.0.1:65444/vjyAZyBxWxA=/ws
+Syncing files to device iPhone 15 Pro...
+flutter: null
+flutter: User(displayName: null, email: l@gmail.com, isEmailVerified: false, isAnonymous: false, metadata: UserMetadata(creationTime: 2023-12-27 22:39:44.296Z, lastSignInTime: 2023-12-27 22:39:44.296Z), phoneNumber: null, photoURL: null, providerData, [UserInfo(displayName: null, email: l@gmail.com, phoneNumber: null, photoURL: null, providerId: password, uid: l@gmail.com)], refreshToken: AMf-vBxPK7P9sJwK6PrG0mtFeWct_NW8qe1lyLJAhJ8A3zQ96JkBGxi6TnzQC16JauWG59RH1R99jIpgsEV22KbrxGOS-2uDx6cweVx3WOLv92tw7E0x_EjukUsESTHbicif-FinsClmqYy0KvDeSTSy83Icw-lBAx_V8vEFFZMJ-0Dy5UwQcRs3tfVM5lLVTdE6TwnjD8PW, tenantId: null, uid: Jc1Td6CLLkcbsEWX0cbbh65zzQi1)
+flutter: in feeds build >>>
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: null
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: happy password
+flutter: start trying
+flutter: tt@gmail.com
+flutter: 1122334
+flutter: scaffoldKey is
+flutter: [LabeledGlobalKey<ScaffoldState>#ee3dc]
+flutter: [LabeledGlobalKey<FormState>#b4000]
+flutter: create user res user
+flutter: User(displayName: null, email: tt@gmail.com, isEmailVerified: false, isAnonymous: false, metadata: UserMetadata(creationTime: 2023-12-27 22:45:45.403Z, lastSignInTime: 2023-12-27 22:45:45.403Z), phoneNumber: null, photoURL: null, providerData, [UserInfo(displayName: null, email: tt@gmail.com, phoneNumber: null, photoURL: null, providerId: password, uid: tt@gmail.com)], refreshToken: AMf-vBxNi7roMh16t7EwiYSf4IDWbuIMZc2lzS_fU7LaGo4DpQdMEUVUDDBzcOu_IkSHHt9bKEk00VFLkvOOGocdhyaehvJ-yaopfKLm4ZDRCqZPaVHGKpiUIOan2BxOnnrF0yMtnYtTNFMUhG-rPT4oSfsur9TcPwjQR5CPzpurjM41WbDiDzS9-FKS8jUmOkPtngWswira, tenantId: null, uid: rB7HpIsVMnQD2TMZBpkeS63Y2Ay1)
+flutter: in saveusertofirestore function
+flutter: User(displayName: null, email: tt@gmail.com, isEmailVerified: false, isAnonymous: false, metadata: UserMetadata(creationTime: 2023-12-27 22:45:45.403Z, lastSignInTime: 2023-12-27 22:45:45.403Z), phoneNumber: null, photoURL: null, providerData, [UserInfo(displayName: null, email: tt@gmail.com, phoneNumber: null, photoURL: null, providerId: password, uid: tt@gmail.com)], refreshToken: AMf-vBxNi7roMh16t7EwiYSf4IDWbuIMZc2lzS_fU7LaGo4DpQdMEUVUDDBzcOu_IkSHHt9bKEk00VFLkvOOGocdhyaehvJ-yaopfKLm4ZDRCqZPaVHGKpiUIOan2BxOnnrF0yMtnYtTNFMUhG-rPT4oSfsur9TcPwjQR5CPzpurjM41WbDiDzS9-FKS8jUmOkPtngWswira, tenantId: null, uid: rB7HpIsVMnQD2TMZBpkeS63Y2Ay1)
+flutter: User(displayName: null, email: tt@gmail.com, isEmailVerified: false, isAnonymous: false, metadata: UserMetadata(creationTime: 2023-12-27 22:45:45.403Z, lastSignInTime: 2023-12-27 22:45:45.403Z), phoneNumber: null, photoURL: null, providerData, [UserInfo(displayName: null, email: tt@gmail.com, phoneNumber: null, photoURL: null, providerId: password, uid: tt@gmail.com)], refreshToken: AMf-vBxNi7roMh16t7EwiYSf4IDWbuIMZc2lzS_fU7LaGo4DpQdMEUVUDDBzcOu_IkSHHt9bKEk00VFLkvOOGocdhyaehvJ-yaopfKLm4ZDRCqZPaVHGKpiUIOan2BxOnnrF0yMtnYtTNFMUhG-rPT4oSfsur9TcPwjQR5CPzpurjM41WbDiDzS9-FKS8jUmOkPtngWswira, tenantId: null, uid: rB7HpIsVMnQD2TMZBpkeS63Y2Ay1)
+flutter: in feeds build >>>
