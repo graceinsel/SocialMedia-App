@@ -4,9 +4,11 @@ class PostModel {
   String? id;
   String? postId;
   String? ownerId;
+  String? ownerDp;
   String? username;
   String? location;
   String? description;
+  // change this mediaUrl to a list of media, to support multi image feed.
   String? mediaUrl;
   Timestamp? timestamp;
   
@@ -15,6 +17,7 @@ class PostModel {
     this.id,
     this.postId,
     this.ownerId,
+    this.ownerDp,
     this.location,
     this.description,
     this.mediaUrl,
@@ -25,6 +28,7 @@ class PostModel {
     id = json['id'];
     postId = json['postId'];
     ownerId = json['ownerId'];
+    ownerDp = json['ownerDp'];
     location = json['location'];
     username= json['username'];
     description = json['description'];
@@ -37,10 +41,10 @@ class PostModel {
     data['id'] = this.id;
     data['postId'] = this.postId;
     data['ownerId'] = this.ownerId;
+    data['ownerDp'] = this.ownerDp;
     data['location'] = this.location;
     data['description'] = this.description;
     data['mediaUrl'] = this.mediaUrl;
-
     data['timestamp'] = this.timestamp;
     data['username'] = this.username;
     return data;

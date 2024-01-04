@@ -13,6 +13,7 @@ import 'package:social_media_app/screens/list_posts.dart';
 import 'package:social_media_app/screens/settings.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/post_tiles.dart';
+import 'package:social_media_app/chats/recent_chats.dart';
 
 class Profile extends StatefulWidget {
   final profileId;
@@ -44,23 +45,63 @@ class _ProfileState extends State<Profile> {
     checkIfFollowing();
   }
 
+  Future<DocumentSnapshot> fetchDocumentWithRetry(
+      DocumentReference documentReference,
+      {int maxAttempts = 3, Duration initialDelay = const Duration(seconds: 1)}) async {
+    int attempts = 0;
+    Duration delay = initialDelay;
+
+    while (attempts < maxAttempts) {
+      try {
+        return await documentReference.get();
+      } catch (e) {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          rethrow;
+        }
+        await Future.delayed(delay);
+        delay *= 2;
+      }
+    }
+    throw Exception('Failed to fetch document after retries');
+  }
+
+// Usage in your checkIfFollowing function
   checkIfFollowing() async {
-    DocumentSnapshot doc = await followersRef
-        .doc(widget.profileId)
-        .collection('userFollowers')
-        .doc(currentUserId())
-        .get();
-    setState(() {
-      isFollowing = doc.exists;
-    });
+    try {
+      DocumentSnapshot doc = await fetchDocumentWithRetry(
+        followersRef.doc(widget.profileId).collection('userFollowers').doc(currentUserId()),
+      );
+      if (mounted) {
+        setState(() {
+          isFollowing = doc.exists;
+        });
+      }
+    } catch (e) {
+      // Handle the exception, e.g., show a message to the user
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Ionicons.menu_outline,
+            size: 24.0,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                // TODO(graceyao): add set drawers instead of opening chats
+                builder: (_) => Chats(),
+              ),
+            );
+          },
+        ),
         centerTitle: true,
-        title: Text('WOOBLE'),
         actions: [
           widget.profileId == firebaseAuth.currentUser!.uid
               ? Center(

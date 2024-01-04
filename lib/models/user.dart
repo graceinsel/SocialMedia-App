@@ -6,6 +6,7 @@ class UserModel {
   String? photoUrl;
   String? country;
   String? bio;
+  String? headline;
   String? id;
   Timestamp? signedUpAt;
   Timestamp? lastSeen;
@@ -20,6 +21,7 @@ class UserModel {
       this.isOnline,
       this.lastSeen,
       this.bio,
+      this.headline,
       this.country});
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class UserModel {
     isOnline = json['isOnline'];
     lastSeen = json['lastSeen'];
     bio = json['bio'];
+    headline = json['headline'];
     id = json['id'];
   }
 
@@ -41,6 +44,7 @@ class UserModel {
     data['email'] = this.email;
     data['photoUrl'] = this.photoUrl;
     data['bio'] = this.bio;
+    data['headline'] = this.headline;
     data['signedUpAt'] = this.signedUpAt;
     data['isOnline'] = this.isOnline;
     data['lastSeen'] = this.lastSeen;

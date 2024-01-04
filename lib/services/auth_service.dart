@@ -5,7 +5,6 @@ import 'package:social_media_app/utils/firebase.dart';
 class AuthService {
   User getCurrentUser() {
     User user = firebaseAuth.currentUser!;
-    print(user);
     return user;
   }
 
@@ -20,8 +19,12 @@ class AuthService {
       email: '$email',
       password: '$password',
     );
+    print('create user res user');
+    print(res.user);
     if (res.user != null) {
-      await saveUserToFirestore(name!, res.user!, email!, country!);
+      // TODO(graceyao): if this is not commented, the app hangs here no error, just hang there.
+      // await saveUserToFirestore(name!, res.user!, email!, country!);
+      print('auth service save saveUserToFirestore done');
       return true;
     } else {
       return false;
@@ -31,16 +34,23 @@ class AuthService {
 //this will save the details inputted by the user to firestore.
   saveUserToFirestore(
       String name, User user, String email, String country) async {
-    await usersRef.doc(user.uid).set({
-      'username': name,
-      'email': email,
-      'time': Timestamp.now(),
-      'id': user.uid,
-      'bio': "",
-      'country': country,
-      'photoUrl': user.photoURL ?? '',
-      'gender': '',
-    });
+    print('in saveusertofirestore function');
+    print(user);
+    try {
+      await usersRef.doc(user.uid).set({
+        'username': name,
+        'email': email,
+        'time': Timestamp.now(),
+        'id': user.uid,
+        'bio': "",
+        'country': country,
+        'photoUrl': user.photoURL ?? '',
+        'gender': '',
+      });
+    } catch(e) {
+      print('Error occurred: $e');
+    }
+    print('xxxxx');
   }
 
 //function to login a user with his email and password
@@ -49,7 +59,8 @@ class AuthService {
       email: '$email',
       password: '$password',
     );
-
+    print('login user');
+    print(res);
     if (res.user != null) {
       return true;
     } else {

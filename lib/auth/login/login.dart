@@ -95,6 +95,8 @@ class _LoginState extends State<Login> {
   }
 
   buildForm(BuildContext context, LoginViewModel viewModel) {
+    print("login key");
+    print(viewModel.formKey);
     return Form(
       key: viewModel.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -155,7 +157,7 @@ class _LoginState extends State<Login> {
           Container(
             height: 45.0,
             width: 180.0,
-            child: ElevatedButton(
+            child: FilledButton(
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(

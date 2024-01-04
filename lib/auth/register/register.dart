@@ -8,6 +8,9 @@ import 'package:social_media_app/components/text_form_builder.dart';
 import 'package:social_media_app/utils/validation.dart';
 import 'package:social_media_app/view_models/auth/register_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
+import 'package:social_media_app/utils/constants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:social_media_app/auth/login/login.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -18,6 +21,8 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     RegisterViewModel viewModel = Provider.of<RegisterViewModel>(context);
+    print('scaffoldKey is');
+    print( viewModel.scaffoldKey);
     return LoadingOverlay(
       progressIndicator: circularProgress(context),
       isLoading: viewModel.loading,
@@ -26,13 +31,13 @@ class _RegisterState extends State<Register> {
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
           children: [
-            SizedBox(height: MediaQuery.of(context).size.height / 12),
+            SizedBox(height: MediaQuery.of(context).size.height / 15),
             Text(
-              'ARTLAS',
+              Constants.appName,
               textAlign: TextAlign.center, // Center text horizontally
               style: GoogleFonts.crimsonText(
                 fontWeight: FontWeight.w400,
-                fontSize: 32.0,
+                fontSize: 30.0,
               ),
             ),
             Text(
@@ -54,7 +59,13 @@ class _RegisterState extends State<Register> {
                   'Already have an account  ',
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (_) => Login(),
+                      ),
+                    );
+                  },
                   child: Text(
                     'Login',
                     style: TextStyle(
@@ -72,6 +83,7 @@ class _RegisterState extends State<Register> {
   }
 
   buildForm(RegisterViewModel viewModel, BuildContext context) {
+    print(viewModel.formKey);
     return Form(
       key: viewModel.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -123,26 +135,13 @@ class _RegisterState extends State<Register> {
           TextFormBuilder(
             enabled: !viewModel.loading,
             prefix: Ionicons.person_outline,
-            hintText: "First Name",
+            hintText: "Your Name",
             textInputAction: TextInputAction.next,
             validateFunction: Validations.validateName,
             onSaved: (String val) {
               viewModel.setName(val);
             },
-            focusNode: viewModel.firstNameFN,
-            nextFocusNode: viewModel.lastNameFN,
-          ),
-          SizedBox(height: 20.0),
-          TextFormBuilder(
-            enabled: !viewModel.loading,
-            prefix: Ionicons.person_outline,
-            hintText: "Last Name",
-            textInputAction: TextInputAction.next,
-            validateFunction: Validations.validateName,
-            onSaved: (String val) {
-              viewModel.setName(val);
-            },
-            focusNode: viewModel.lastNameFN,
+            focusNode: viewModel.usernameFN,
             nextFocusNode: viewModel.countryFN,
           ),
           SizedBox(height: 20.0),

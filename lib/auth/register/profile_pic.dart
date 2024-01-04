@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:social_media_app/components/custom_image.dart';
 import 'package:social_media_app/view_models/auth/posts_view_model.dart';
 import 'package:social_media_app/widgets/indicators.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePicture extends StatefulWidget {
   @override
@@ -15,10 +16,9 @@ class _ProfilePictureState extends State<ProfilePicture> {
   @override
   Widget build(BuildContext context) {
     PostsViewModel viewModel = Provider.of<PostsViewModel>(context);
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool value) async {
         viewModel.resetPost();
-        return true;
       },
       child: LoadingOverlay(
         progressIndicator: circularProgress(context),
@@ -26,31 +26,35 @@ class _ProfilePictureState extends State<ProfilePicture> {
         child: Scaffold(
           key: viewModel.scaffoldKey,
           appBar: AppBar(
-            title: Text('Add a profile picture'),
+            title: Text('More Details About You',
+              textAlign: TextAlign.center, // Center text horizontally
+              style: GoogleFonts.crimsonText(
+                fontWeight: FontWeight.w400,
+                fontSize: 20.0,
+              ),
+            ),
             centerTitle: true,
             automaticallyImplyLeading: false,
           ),
           body: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 30),
             children: [
               InkWell(
                 onTap: () => showImageChoices(context, viewModel),
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width - 30,
+                  // width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.width - 200,
+                  width: 100,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Colors.grey[200],
                     borderRadius: BorderRadius.all(
                       Radius.circular(3.0),
-                    ),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                   child: viewModel.imgLink != null
                       ? CustomImage(
                           imageUrl: viewModel.imgLink,
-                          width: MediaQuery.of(context).size.width,
+                          width: MediaQuery.of(context).size.width - 30,
                           height: MediaQuery.of(context).size.width - 30,
                           fit: BoxFit.cover,
                         )
@@ -65,16 +69,18 @@ class _ProfilePictureState extends State<ProfilePicture> {
                             )
                           : Image.file(
                               viewModel.mediaUrl!,
-                              width: MediaQuery.of(context).size.width,
+                              width: MediaQuery.of(context).size.width - 30,
                               height: MediaQuery.of(context).size.width - 30,
                               fit: BoxFit.cover,
                             ),
                 ),
               ),
               SizedBox(height: 10.0),
+
               Center(
                 child: ElevatedButton(
                   style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(Size(200, 30)),
                     backgroundColor: MaterialStateProperty.all<Color>(
                         Theme.of(context).colorScheme.secondary),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -84,9 +90,11 @@ class _ProfilePictureState extends State<ProfilePicture> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.symmetric(vertical:12, horizontal: 0),
                     child: Center(
-                      child: Text('done'.toUpperCase()),
+                      child: Text('done'.toUpperCase(), style: TextStyle(
+                        color: Colors.white
+                      )),
                     ),
                   ),
                   onPressed: () => viewModel.uploadProfilePicture(context),
@@ -107,13 +115,13 @@ class _ProfilePictureState extends State<ProfilePicture> {
       ),
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: .6,
+          heightFactor: .55,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20.0),
+              SizedBox(height: 30.0),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Text(
                   'Select from'.toUpperCase(),
                   style: TextStyle(

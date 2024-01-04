@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/auth/register/profile_pic.dart';
 import 'package:social_media_app/services/auth_service.dart';
@@ -9,14 +8,12 @@ class RegisterViewModel extends ChangeNotifier {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool validate = false;
   bool loading = false;
-  String? username, firstName, lastName, email, country, password, cPassword;
-  FocusNode usernameFN = FocusNode();
-  FocusNode firstNameFN = FocusNode();
-  FocusNode lastNameFN = FocusNode();
+  String? username, email, country, password, cPassword;
   FocusNode emailFN = FocusNode();
-  FocusNode countryFN = FocusNode();
   FocusNode passFN = FocusNode();
   FocusNode cPassFN = FocusNode();
+  FocusNode usernameFN = FocusNode();
+  FocusNode countryFN = FocusNode();
   AuthService auth = AuthService();
 
   register(BuildContext context) async {
@@ -31,13 +28,16 @@ class RegisterViewModel extends ChangeNotifier {
       if (password == cPassword) {
         loading = true;
         notifyListeners();
+        print("happy password");
         try {
+          print('start trying');
           bool success = await auth.createUser(
             name: username,
             email: email,
             password: password,
             country: country,
           );
+          print('success');
           print(success);
           if (success) {
             Navigator.of(context).pushReplacement(

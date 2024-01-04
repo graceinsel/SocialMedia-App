@@ -25,6 +25,7 @@ class PostsViewModel extends ChangeNotifier {
   //Variables
   bool loading = false;
   String? username;
+  String? userAvatarUrl;
   File? mediaUrl;
   final picker = ImagePicker();
   String? location;
@@ -52,18 +53,13 @@ class PostsViewModel extends ChangeNotifier {
   }
 
   setPost(PostModel post) {
-    if (post != null) {
-      description = post.description;
-      imgLink = post.mediaUrl;
-      location = post.location;
-      edit = true;
-      edit = false;
-      notifyListeners();
-    } else {
-      edit = false;
-      notifyListeners();
+    description = post.description;
+    imgLink = post.mediaUrl;
+    location = post.location;
+    edit = true;
+    edit = false;
+    notifyListeners();
     }
-  }
 
   setUsername(String val) {
     print('SetName $val');

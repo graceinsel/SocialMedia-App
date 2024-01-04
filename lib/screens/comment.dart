@@ -12,6 +12,7 @@ import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/cached_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:google_fonts/google_fonts.dart';
 
 class Comments extends StatefulWidget {
   final PostModel? post;
@@ -41,11 +42,17 @@ class _CommentsState extends State<Comments> {
             Navigator.pop(context);
           },
           child: Icon(
-            CupertinoIcons.xmark_circle_fill,
+            CupertinoIcons.xmark,
           ),
         ),
         centerTitle: true,
-        title: Text('Comments'),
+        title: Text(
+          'Comments',
+          style: GoogleFonts.crimsonText(
+            fontWeight: FontWeight.w400,
+            fontSize: 22.0,
+          ),
+        ),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -70,9 +77,6 @@ class _CommentsState extends State<Comments> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                  ),
                   constraints: BoxConstraints(
                     maxHeight: 190.0,
                   ),
@@ -88,7 +92,7 @@ class _CommentsState extends State<Comments> {
                             style: TextStyle(
                               fontSize: 15.0,
                               color:
-                                  Theme.of(context).textTheme.headline6!.color,
+                                  Theme.of(context).textTheme.titleLarge!.color,
                             ),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10.0),
@@ -122,11 +126,8 @@ class _CommentsState extends State<Comments> {
                               ),
                               hintText: "Write your comment...",
                               hintStyle: TextStyle(
-                                fontSize: 15.0,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .color,
+                                fontSize: 14.0,
+                                color: Colors.grey,
                               ),
                             ),
                             maxLines: null,
@@ -193,7 +194,10 @@ class _CommentsState extends State<Comments> {
                     children: [
                       Text(
                         timeago.format(widget.post!.timestamp!.toDate()),
-                        style: TextStyle(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12.0
+                        ),
                       ),
                       SizedBox(width: 3.0),
                       StreamBuilder(

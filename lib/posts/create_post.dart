@@ -41,7 +41,27 @@ class _CreatePostState extends State<CreatePost> {
                 Navigator.pop(context);
               },
             ),
-            title: Text('WOOBLE'.toUpperCase()),
+            title: Row(
+              children: [
+                Spacer(),
+                StreamBuilder(
+                    stream: usersRef.doc(currentUserId()).snapshots(),
+                    builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        UserModel user = UserModel.fromJson(
+                          snapshot.data!.data() as Map<String, dynamic>,
+                        );
+                        return CircleAvatar(
+                            radius: 16.0,
+                            backgroundImage: NetworkImage(user.photoUrl!),
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                Spacer(),
+              ],
+              ),
             centerTitle: true,
             actions: [
               GestureDetector(
@@ -53,9 +73,9 @@ class _CreatePostState extends State<CreatePost> {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
-                    'Post'.toUpperCase(),
+                    'Post',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w400,
                       fontSize: 15.0,
                       color: Theme.of(context).colorScheme.secondary,
                     ),
@@ -67,38 +87,14 @@ class _CreatePostState extends State<CreatePost> {
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
             children: [
-              SizedBox(height: 15.0),
-              StreamBuilder(
-                stream: usersRef.doc(currentUserId()).snapshots(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    UserModel user = UserModel.fromJson(
-                      snapshot.data!.data() as Map<String, dynamic>,
-                    );
-                    return ListTile(
-                      leading: CircleAvatar(
-                        radius: 25.0,
-                        backgroundImage: NetworkImage(user.photoUrl!),
-                      ),
-                      title: Text(
-                        user.username!,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        user.email!,
-                      ),
-                    );
-                  }
-                  return Container();
-                },
-              ),
+              SizedBox(height: 4.0),
               InkWell(
                 onTap: () => showImageChoices(context, viewModel),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width - 30,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Colors.grey[200],
                     borderRadius: BorderRadius.all(
                       Radius.circular(5.0),
                     ),
@@ -135,7 +131,7 @@ class _CreatePostState extends State<CreatePost> {
               Text(
                 'Post Caption'.toUpperCase(),
                 style: TextStyle(
-                  fontSize: 15.0,
+                  fontSize: 14.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -144,6 +140,10 @@ class _CreatePostState extends State<CreatePost> {
                 decoration: InputDecoration(
                   hintText: 'Eg. This is very beautiful place!',
                   focusedBorder: UnderlineInputBorder(),
+                  labelStyle: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w400,
+                  )
                 ),
                 maxLines: null,
                 onChanged: (val) => viewModel.setDescription(val),
@@ -152,7 +152,7 @@ class _CreatePostState extends State<CreatePost> {
               Text(
                 'Location'.toUpperCase(),
                 style: TextStyle(
-                  fontSize: 15.0,
+                  fontSize: 14.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
