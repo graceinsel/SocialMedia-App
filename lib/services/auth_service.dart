@@ -19,8 +19,8 @@ class AuthService {
       email: '$email',
       password: '$password',
     );
-    print('create user res user');
-    print(res.user);
+    // print('create user res user');
+    // print(res.user);
     if (res.user != null) {
       // TODO(graceyao): if this is not commented, the app hangs here no error, just hang there.
       // await saveUserToFirestore(name!, res.user!, email!, country!);
@@ -34,8 +34,8 @@ class AuthService {
 //this will save the details inputted by the user to firestore.
   saveUserToFirestore(
       String name, User user, String email, String country) async {
-    print('in saveusertofirestore function');
-    print(user);
+    // print('in saveusertofirestore function');
+    // print(user);
     try {
       await usersRef.doc(user.uid).set({
         'username': name,

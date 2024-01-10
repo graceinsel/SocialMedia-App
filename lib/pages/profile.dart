@@ -14,6 +14,7 @@ import 'package:social_media_app/screens/settings.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/post_tiles.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Profile extends StatefulWidget {
   final profileId;
@@ -24,30 +25,41 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   User? user;
   bool isLoading = false;
   int postCount = 0;
   int followersCount = 0;
+  // When A follows B and B follows back, we call it a connection.
+  int connectionsCount = 0;
   int followingCount = 0;
   bool isFollowing = false;
   UserModel? users;
   final DateTime timestamp = DateTime.now();
   ScrollController controller = ScrollController();
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    checkIfFollowing();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   currentUserId() {
     return firebaseAuth.currentUser?.uid;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    checkIfFollowing();
-  }
-
   Future<DocumentSnapshot> fetchDocumentWithRetry(
       DocumentReference documentReference,
-      {int maxAttempts = 3, Duration initialDelay = const Duration(seconds: 1)}) async {
+      {int maxAttempts = 3,
+      Duration initialDelay = const Duration(seconds: 1)}) async {
     int attempts = 0;
     Duration delay = initialDelay;
 
@@ -70,7 +82,10 @@ class _ProfileState extends State<Profile> {
   checkIfFollowing() async {
     try {
       DocumentSnapshot doc = await fetchDocumentWithRetry(
-        followersRef.doc(widget.profileId).collection('userFollowers').doc(currentUserId()),
+        followersRef
+            .doc(widget.profileId)
+            .collection('userFollowers')
+            .doc(currentUserId()),
       );
       if (mounted) {
         setState(() {
@@ -101,13 +116,62 @@ class _ProfileState extends State<Profile> {
             );
           },
         ),
-        centerTitle: true,
+        // centerTitle: true,
+        // Log out button
+        // TODO(ui): logout should be moved to the drawers instead of here
+        // TODO(feature): this should be follow button instead of log out
+        // actions: [
+        //   widget.profileId == firebaseAuth.currentUser!.uid
+        //       ? Center(
+        //           child: Padding(
+        //             padding: const EdgeInsets.only(right: 25.0),
+        //             child: GestureDetector(
+        //               onTap: () async {
+        //                 await firebaseAuth.signOut();
+        //                 Navigator.of(context).push(
+        //                   CupertinoPageRoute(
+        //                     builder: (_) => Register(),
+        //                   ),
+        //                 );
+        //               },
+        //               child: Text(
+        //                 'Log Out',
+        //                 style: TextStyle(
+        //                   fontSize: 12.0,
+        //                 ),
+        //               ),
+        //             ),
+        //           ),
+        //         )
+        //       : Center(
+        //           child: Padding(
+        //             padding: const EdgeInsets.only(right: 25.0),
+        //             child: GestureDetector(
+        //               onTap: () async {
+        //                 await firebaseAuth.signOut();
+        //                 Navigator.of(context).push(
+        //                   CupertinoPageRoute(
+        //                     builder: (_) => Register(),
+        //                   ),
+        //                 );
+        //               },
+        //               child: Text(
+        //                 'Log Out',
+        //                 style: TextStyle(
+        //                   fontSize: 12.0,
+        //                 ),
+        //               ),
+        //             ),
+        //           ),
+        //         )
+        // ],
         actions: [
-          widget.profileId == firebaseAuth.currentUser!.uid
+          widget.profileId != firebaseAuth.currentUser!.uid
               ? Center(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 25.0),
                     child: GestureDetector(
+                      // TODO(feature): add follow button when current user is not self.
                       onTap: () async {
                         await firebaseAuth.signOut();
                         Navigator.of(context).push(
@@ -117,185 +181,104 @@ class _ProfileState extends State<Profile> {
                         );
                       },
                       child: Text(
-                        'Log Out',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 15.0,
-                        ),
+                        'Follow +',
+                        style: GoogleFonts.robotoSerif(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.0,
+                            letterSpacing: 0.8,
+                            color: Colors.blueGrey),
                       ),
                     ),
                   ),
                 )
-              : SizedBox()
+              : Container()
         ],
       ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            automaticallyImplyLeading: false,
-            pinned: true,
-            floating: false,
-            toolbarHeight: 5.0,
-            collapsedHeight: 6.0,
-            expandedHeight: 225.0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: StreamBuilder(
-                stream: usersRef.doc(widget.profileId).snapshots(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    UserModel user = UserModel.fromJson(
-                      snapshot.data!.data() as Map<String, dynamic>,
-                    );
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
+        children: <Widget>[
+          SizedBox(height: 12.0),
+          StreamBuilder(
+            stream: usersRef.doc(widget.profileId).snapshots(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasData) {
+                UserModel user = UserModel.fromJson(
+                  snapshot.data!.data() as Map<String, dynamic>,
+                );
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment
+                          .start, // Align children to start horizontally
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: user.photoUrl!.isEmpty
-                                  ? CircleAvatar(
-                                      radius: 40.0,
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                      child: Center(
-                                        child: Text(
-                                          '${user.username![0].toUpperCase()}',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : CircleAvatar(
-                                      radius: 40.0,
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(
-                                        '${user.photoUrl}',
-                                      ),
-                                    ),
-                            ),
-                            SizedBox(width: 20.0),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 32.0),
-                                Row(
-                                  children: [
-                                    Visibility(
-                                      visible: false,
-                                      child: SizedBox(width: 10.0),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 130.0,
-                                          child: Text(
-                                            user.username!,
-                                            style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w900,
-                                            ),
-                                            maxLines: null,
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 130.0,
-                                          child: Text(
-                                            user.country!,
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        SizedBox(width: 10.0),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              user.email!,
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    widget.profileId == currentUserId()
-                                        ? InkWell(
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                CupertinoPageRoute(
-                                                  builder: (_) => Setting(),
-                                                ),
-                                              );
-                                            },
-                                            child: Column(
-                                              children: [
-                                                Icon(
-                                                  Ionicons.settings_outline,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                                Text(
-                                                  'settings',
-                                                  style: TextStyle(
-                                                    fontSize: 11.5,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        : const Text('')
-                                    // : buildLikeButton()
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                        // Avatar
                         Padding(
-                          padding: const EdgeInsets.only(top: 10.0, left: 20.0),
-                          child: user.bio!.isEmpty
-                              ? Container()
-                              : Container(
-                                  width: 200,
-                                  child: Text(
-                                    user.bio!,
-                                    style: TextStyle(
-                                      fontSize: 10.0,
-                                      fontWeight: FontWeight.w600,
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: user.photoUrl!.isEmpty
+                              ? CircleAvatar(
+                                  radius: 40.0,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  child: Center(
+                                    child: Text(
+                                      '${user.username![0].toUpperCase()}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                    maxLines: null,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  radius: 40.0,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    '${user.photoUrl}',
                                   ),
                                 ),
                         ),
-                        SizedBox(height: 10.0),
-                        Container(
-                          height: 50.0,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 30.0),
-                            child: Row(
+                        SizedBox(width: 20.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 130.0,
+                              child: Text(
+                                user.username!,
+                                style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20.0,
+                                    letterSpacing: 0.8),
+                                maxLines: 1,
+                              ),
+                            ),
+                            SizedBox(height: 2.0),
+                            user.bio!.isEmpty
+                                ? Container()
+                                : Container(
+                                    width:
+                                        240, // TODO(UI): make sure this is safe for all browsers
+                                    child: Text(
+                                      user.bio!,
+                                      style: TextStyle(
+                                        fontSize: 11.0,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.blueGrey.shade700,
+                                        // fontStyle: FontStyle.italic, // This makes the text italic
+                                      ),
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                            SizedBox(height: 12.0),
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
+                                // TODO(feature): add backend support for connection count.
                                 StreamBuilder(
-                                  stream: postRef
-                                      .where('ownerId',
-                                          isEqualTo: widget.profileId)
+                                  stream: followingRef
+                                      .doc(widget.profileId)
+                                      .collection('connectionsCount')
                                       .snapshots(),
                                   builder: (context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -304,20 +287,20 @@ class _ProfileState extends State<Profile> {
                                           snapshot.data;
                                       List<DocumentSnapshot> docs = snap!.docs;
                                       return buildCount(
-                                          "POSTS", docs.length ?? 0);
+                                          "connections", docs.length ?? 0);
                                     } else {
-                                      return buildCount("POSTS", 0);
+                                      return buildCount("connections", 0);
                                     }
                                   },
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 15.0),
-                                  child: Container(
-                                    height: 50.0,
-                                    width: 0.3,
-                                    color: Colors.grey,
-                                  ),
+                                SizedBox(width: 12.0),
+                                CircleAvatar(
+                                  radius: 2.0, // Radius of the dot
+                                  backgroundColor:
+                                      Colors.blueGrey, // Color of the dot
                                 ),
+                                SizedBox(width: 12.0),
+
                                 StreamBuilder(
                                   stream: followersRef
                                       .doc(widget.profileId)
@@ -330,118 +313,123 @@ class _ProfileState extends State<Profile> {
                                           snapshot.data;
                                       List<DocumentSnapshot> docs = snap!.docs;
                                       return buildCount(
-                                          "FOLLOWERS", docs.length ?? 0);
+                                          "followers", docs.length ?? 0);
                                     } else {
-                                      return buildCount("FOLLOWERS", 0);
-                                    }
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 15.0),
-                                  child: Container(
-                                    height: 50.0,
-                                    width: 0.3,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                StreamBuilder(
-                                  stream: followingRef
-                                      .doc(widget.profileId)
-                                      .collection('userFollowing')
-                                      .snapshots(),
-                                  builder: (context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (snapshot.hasData) {
-                                      QuerySnapshot<Object?>? snap =
-                                          snapshot.data;
-                                      List<DocumentSnapshot> docs = snap!.docs;
-                                      return buildCount(
-                                          "FOLLOWING", docs.length ?? 0);
-                                    } else {
-                                      return buildCount("FOLLOWING", 0);
+                                      return buildCount("followers", 0);
                                     }
                                   },
                                 ),
                               ],
                             ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: 24.0, bottom: 12.0),
+                        child: Container(
+                          height: 0.3, // Height of the line
+                          color: Colors.grey, // Color of the line
+                          width: MediaQuery.of(context).size.width *
+                              0.9, // 90% of screen width
+                          // width: double.infinity, // Full width line
+                        ))
+                  ],
+                );
+              }
+              return Container();
+            },
+          ),
+          Flexible(
+            child: DefaultTabController(
+              length: 4,
+              child: Scaffold(
+                appBar: AppBar(
+                  title: TabBar(
+                    controller: _tabController,
+                    tabs: [
+                      Tab(text: 'News'),
+                      Tab(text: 'Artworks'),
+                      Tab(text: 'Event'),
+                      Tab(text: 'About'),
+                    ],
+                    labelStyle: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.blueGrey,
+                        fontSize: 13.0,
+                        letterSpacing: 0.6),
+                  ),
+                ),
+                body: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    CustomScrollView(
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 24.0, top: 12.0), // Left padding of 12px
+                            child: StreamBuilder(
+                              stream: postRef
+                                  .where('ownerId', isEqualTo: widget.profileId)
+                                  .snapshots(),
+                              builder: (context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  QuerySnapshot<Object?>? snap = snapshot.data;
+                                  List<DocumentSnapshot> docs = snap!.docs;
+                                  return buildCount("posts", docs.length ?? 0);
+                                } else {
+                                  return buildCount("posts", 0);
+                                }
+                              },
+                            ),
                           ),
                         ),
-                        buildProfileButton(user),
+                        // Your scrollable content for 'News' tab
                       ],
-                    );
-                  }
-                  return Container();
-                },
+                    ),
+                    CustomScrollView(
+                      slivers: <Widget>[
+                        // Your scrollable content for 'Artworks' tab
+                      ],
+                    ),
+                    CustomScrollView(
+                      slivers: <Widget>[
+                        // Your scrollable content for 'Event' tab
+                      ],
+                    ),
+                    CustomScrollView(
+                      slivers: <Widget>[
+                        // Your scrollable content for 'About' tab
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                if (index > 0) return null;
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            'All Posts',
-                            style: TextStyle(fontWeight: FontWeight.w900),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () async {
-                              DocumentSnapshot doc =
-                                  await usersRef.doc(widget.profileId).get();
-                              var currentUser = UserModel.fromJson(
-                                doc.data() as Map<String, dynamic>,
-                              );
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (_) => ListPosts(
-                                    userId: widget.profileId,
-                                    username: currentUser.username,
-                                  ),
-                                ),
-                              );
-                            },
-                            icon: Icon(Ionicons.grid_outline),
-                          )
-                        ],
-                      ),
-                    ),
-                    buildPostView()
-                  ],
-                );
-              },
-            ),
-          )
         ],
       ),
     );
   }
 
   buildCount(String label, int count) {
-    return Column(
+    return Row(
       children: <Widget>[
         Text(
           count.toString(),
           style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w900,
-            fontFamily: 'Ubuntu-Regular',
+            fontSize: 12.0,
           ),
         ),
-        SizedBox(height: 3.0),
+        SizedBox(width: 4.0),
         Text(
           label,
           style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            fontFamily: 'Ubuntu-Regular',
-          ),
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: Colors.blueGrey.shade500),
         )
       ],
     );

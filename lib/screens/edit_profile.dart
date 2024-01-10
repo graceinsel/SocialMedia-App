@@ -18,6 +18,7 @@ class EditProfile extends StatefulWidget {
   _EditProfileState createState() => _EditProfileState();
 }
 
+// TODO(bugfix): saving changes indicator forever.
 class _EditProfileState extends State<EditProfile> {
   UserModel? user;
 
