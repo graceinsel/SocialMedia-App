@@ -11,6 +11,9 @@ class UserModel {
   Timestamp? signedUpAt;
   Timestamp? lastSeen;
   bool? isOnline;
+  List<String>? artworkCreatedList;
+  List<String>? artworkFollowedList;
+  List<String>? artworkCollectedList;
 
   UserModel(
       {this.username,
@@ -35,6 +38,10 @@ class UserModel {
     bio = json['bio'];
     headline = json['headline'];
     id = json['id'];
+
+    artworkCollectedList = json['artworkCollectedList'];
+    artworkCreatedList = json['artworkCreatedList'];
+    artworkFollowedList = json['artworkFollowedList'];
   }
 
   Map<String, dynamic> toJson() {
@@ -49,6 +56,9 @@ class UserModel {
     data['isOnline'] = this.isOnline;
     data['lastSeen'] = this.lastSeen;
     data['id'] = this.id;
+    data['artworkCreatedList'] = this.artworkCreatedList;
+    data['artworkCollectedList'] = this.artworkCollectedList;
+    data['artworkFollwedList'] = this.artworkFollowedList;
     return data;
   }
 }

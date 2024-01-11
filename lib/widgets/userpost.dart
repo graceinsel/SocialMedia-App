@@ -15,10 +15,15 @@ import 'package:social_media_app/screens/view_image.dart';
 import 'package:social_media_app/services/post_service.dart';
 import 'package:social_media_app/utils/firebase.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:social_media_app/models/enum/page_type.dart';
 
 class UserPost extends StatelessWidget {
   final PostModel? post;
-  UserPost({this.post});
+  final PageType? pageType;
+
+  UserPost({this.post, this.pageType = PageType.FEEDS_PAGE});
+
   final DateTime timestamp = DateTime.now();
 
   currentUserId() {
@@ -29,154 +34,172 @@ class UserPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
-      onTap: () {},
-      borderRadius: BorderRadius.circular(10.0),
-      child: OpenContainer(
-        transitionType: ContainerTransitionType.fadeThrough,
-        openBuilder: (BuildContext context, VoidCallback _) {
-          // ViewImage, image details page.
-          return ViewImage(post: post);
-        },
-        closedElevation: 0.0,
-        closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(2.0),
+    return Padding(
+      padding: EdgeInsets.only(top: 12.0),
+      child: CustomCard(
+        onTap: () {},
+        borderRadius: BorderRadius.circular(10.0),
+        child: OpenContainer(
+          transitionType: ContainerTransitionType.fadeThrough,
+          openBuilder: (BuildContext context, VoidCallback _) {
+            // ViewImage, image details page.
+            return ViewImage(post: post);
+          },
+          closedElevation: 0.0,
+          closedShape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(2.0),
+            ),
           ),
-        ),
-        onClosed: (v) {},
-        closedColor: Theme.of(context).cardColor,
-        closedBuilder: (BuildContext context, VoidCallback openContainer) {
-          return Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  StreamBuilder(
-                    stream: usersRef.doc(currentUserId()).snapshots(),
-                    builder:
-                        (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        UserModel user = UserModel.fromJson(
-                          snapshot.data!.data() as Map<String, dynamic>,
-                        );
-                        return ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                          horizontalTitleGap: 12.0,
-                          leading: CircleAvatar(
-                            radius: 20.0,
-                            backgroundImage: NetworkImage(user.photoUrl!),
-                          ),
-                          title: Text(
-                            user.username!,
-                            style: TextStyle(
-                                fontSize: 14.0, fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                timeago.format(post!.timestamp!.toDate()),
-                                style: TextStyle(fontSize: 10.0),
+          onClosed: (v) {},
+          closedColor: Theme.of(context).cardColor,
+          closedBuilder: (BuildContext context, VoidCallback openContainer) {
+            return Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StreamBuilder(
+                      stream: usersRef.doc(currentUserId()).snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasData) {
+                          UserModel user = UserModel.fromJson(
+                            snapshot.data!.data() as Map<String, dynamic>,
+                          );
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // TODO(feature): clicking avatar should go to home page of the user instead of post details.
+                              CircleAvatar(
+                                radius: pageType == PageType.FEEDS_PAGE
+                                    ? 20.0
+                                    : 12.0,
+                                backgroundImage: NetworkImage(user.photoUrl!),
                               ),
-                              if (user.headline !=
-                                  null) // Check if headline is not null
-                                Text(
-                                  user.headline!,
-                                  style: TextStyle(fontSize: 10.0),
+                              const SizedBox(
+                                  width:
+                                      8.0), // Use const for unchanging widgets
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      pageType == PageType.FEEDS_PAGE
+                                          ? user.username!
+                                          : timeago.format(
+                                              post!.timestamp!.toDate()),
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14.0),
+                                    ),
+                                    if (pageType == PageType.FEEDS_PAGE)
+                                      Text(
+                                        timeago
+                                            .format(post!.timestamp!.toDate()),
+                                        style: TextStyle(
+                                            fontSize: 10.0,
+                                            color: Colors.blueGrey.shade700),
+                                      ),
+                                    if (pageType == PageType.FEEDS_PAGE &&
+                                        user.headline != null)
+                                      Text(
+                                        user.headline!,
+                                        style: const TextStyle(fontSize: 10.0),
+                                      ),
+                                  ],
                                 ),
+                              ),
                             ],
-                          ),
-                        );
-                      }
-                      return Container();
-                    },
-                  ),
-                  SizedBox(width: 10.0),
-                  Visibility(
-                    visible: post!.description != null &&
-                        post!.description.toString().isNotEmpty,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5.0, top: 0.0),
-                      child: Text(
-                        '${post?.description ?? ""}',
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.bodySmall!.color,
-                          fontSize: 14.0,
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                    SizedBox(
+                        height: pageType == PageType.FEEDS_PAGE ? 12.0 : 8.0),
+                    Visibility(
+                      visible: post!.description != null &&
+                          post!.description.toString().isNotEmpty,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5.0, top: 0.0),
+                        child: Text(
+                          '${post?.description ?? ""}',
+                          style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.w400, fontSize: 14.0),
                         ),
-                        maxLines: 2,
                       ),
                     ),
-                  ),
-                  SizedBox(height: 12.0),
-                  ClipRRect(
-                    child: CustomImage(
-                      imageUrl: post?.mediaUrl ?? '',
-                      height: 350.0,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
+                    SizedBox(height: 12.0),
+                    ClipRRect(
+                      child: CustomImage(
+                        imageUrl: post?.mediaUrl ?? '',
+                        height: 350.0,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        buildLikeButton(),
-                        StreamBuilder(
-                          stream: likesRef
-                              .where('postId', isEqualTo: post!.postId)
-                              .snapshots(),
-                          builder:
-                              (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.hasData) {
-                              QuerySnapshot snap = snapshot.data!;
-                              List<DocumentSnapshot> docs = snap.docs;
-                              return buildLikesCount(context, docs.length ?? 0);
-                            } else {
-                              return buildLikesCount(context, 0);
-                            }
-                          },
-                        ),
-                        Spacer(),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                builder: (_) => Comments(post: post),
-                              ),
-                            );
-                          },
-                          // TODO(graceyao): add repost feature.
-                          child: StreamBuilder(
-                            stream: commentRef
-                                .doc(post!.postId!)
-                                .collection("comments")
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          buildLikeButton(),
+                          StreamBuilder(
+                            stream: likesRef
+                                .where('postId', isEqualTo: post!.postId)
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (snapshot.hasData) {
                                 QuerySnapshot snap = snapshot.data!;
                                 List<DocumentSnapshot> docs = snap.docs;
-                                return buildCommentsCount(
-                                    context, docs.length ?? 0);
+                                return buildLikesCount(context, docs.length);
                               } else {
-                                return buildCommentsCount(context, 0);
+                                return buildLikesCount(context, 0);
                               }
                             },
                           ),
-                        ),
-                        SizedBox(width: 4.0)
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              buildUser(context),
-            ],
-          );
-        },
+                          Spacer(),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                CupertinoPageRoute(
+                                  builder: (_) => Comments(post: post),
+                                ),
+                              );
+                            },
+                            // TODO(graceyao): add repost feature.
+                            child: StreamBuilder(
+                              stream: commentRef
+                                  .doc(post!.postId!)
+                                  .collection("comments")
+                                  .snapshots(),
+                              builder: (context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  QuerySnapshot snap = snapshot.data!;
+                                  List<DocumentSnapshot> docs = snap.docs;
+                                  return buildCommentsCount(
+                                      context, docs.length);
+                                } else {
+                                  return buildCommentsCount(context, 0);
+                                }
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 4.0)
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                buildUser(context),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

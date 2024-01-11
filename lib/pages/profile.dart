@@ -15,6 +15,9 @@ import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/post_tiles.dart';
 import 'package:social_media_app/chats/recent_chats.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:social_media_app/widgets/userpost.dart';
+import 'package:social_media_app/widgets/indicators.dart';
+import 'package:social_media_app/models/enum/page_type.dart';
 
 class Profile extends StatefulWidget {
   final profileId;
@@ -326,7 +329,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       ],
                     ),
                     Padding(
-                        padding: EdgeInsets.only(top: 24.0, bottom: 12.0),
+                        padding: EdgeInsets.only(top: 28.0, bottom: 4.0),
                         child: Container(
                           height: 0.3, // Height of the line
                           color: Colors.grey, // Color of the line
@@ -357,37 +360,74 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         fontWeight: FontWeight.w400,
                         color: Colors.blueGrey,
                         fontSize: 13.0,
-                        letterSpacing: 0.6),
+                        letterSpacing: 0.7),
                   ),
                 ),
                 body: TabBarView(
                   controller: _tabController,
                   children: [
-                    CustomScrollView(
-                      slivers: <Widget>[
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                left: 24.0, top: 12.0), // Left padding of 12px
-                            child: StreamBuilder(
-                              stream: postRef
-                                  .where('ownerId', isEqualTo: widget.profileId)
-                                  .snapshots(),
-                              builder: (context,
-                                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasData) {
-                                  QuerySnapshot<Object?>? snap = snapshot.data;
-                                  List<DocumentSnapshot> docs = snap!.docs;
-                                  return buildCount("posts", docs.length ?? 0);
-                                } else {
-                                  return buildCount("posts", 0);
-                                }
-                              },
-                            ),
+                    // TODO(UI): load 5 news post each time when scrolling load next 5.
+                    // TODO(UI): fix scrolling behavior
+                    Center(
+                      child:
+                      RefreshIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                        onRefresh: () => postRef
+                            .orderBy('timestamp', descending: true)
+                            .limit(5)
+                            .get(),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: MediaQuery.of(context).size.height,
+                                child: FutureBuilder(
+                                  future: postRef
+                                      .where('ownerId', isEqualTo: widget.profileId)
+                                      .orderBy('timestamp', descending: true)
+                                      .limit(5)
+                                      .get(),
+                                  builder:
+                                      (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasData) {
+                                      var snap = snapshot.data;
+                                      List docs = snap!.docs;
+                                      return ListView.builder(
+                                        itemCount: docs.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          PostModel posts =
+                                          PostModel.fromJson(docs[index].data());
+                                          return Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10.0, 10.0, 10.0, 20.0),
+                                            // UserPost is the widget for each post.
+                                            child: UserPost(post: posts, pageType: PageType.PROFILE_PAGE),
+                                          );
+                                        },
+                                      );
+                                    } else if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return circularProgress(context);
+                                    } else
+                                      return Center(
+                                        child: Text(
+                                          'No Post Yet',
+                                          style: TextStyle(
+                                            fontSize: 26.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        // Your scrollable content for 'News' tab
-                      ],
+                      ),
                     ),
                     CustomScrollView(
                       slivers: <Widget>[
@@ -429,12 +469,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
           style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Colors.blueGrey.shade500),
+              color: Colors.blueGrey.shade600),
         )
       ],
     );
   }
 
+  // TODO(ui): edit profile to side slide, follow/unfollow to top right corner.
   buildProfileButton(user) {
     //if isMe then display "edit profile"
     bool isMe = widget.profileId == firebaseAuth.currentUser!.uid;
@@ -572,10 +613,31 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     return buildGridPost();
   }
 
+  buildListPost() {
+    return StreamGridWrapper(
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(horizontal: .0),
+      stream: postRef
+          .where('ownerId', isEqualTo: widget.profileId)
+          .orderBy('timestamp', descending: true)
+          .snapshots(),
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (_, DocumentSnapshot snapshot) {
+        PostModel posts =
+            PostModel.fromJson(snapshot.data() as Map<String, dynamic>);
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 20.0),
+          // UserPost is the widget for each post.
+          child: UserPost(post: posts),
+        );
+      },
+    );
+  }
+
   buildGridPost() {
     return StreamGridWrapper(
       shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: .0),
       stream: postRef
           .where('ownerId', isEqualTo: widget.profileId)
           .orderBy('timestamp', descending: true)
@@ -641,3 +703,4 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     );
   }
 }
+

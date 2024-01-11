@@ -15,6 +15,8 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:google_fonts/google_fonts.dart';
 
 class Comments extends StatefulWidget {
+  // Since Event, Artworks are both inherited from PostModel, so the comments
+  // will be able to add to Events and Artworks.
   final PostModel? post;
 
   Comments({this.post});
@@ -195,9 +197,7 @@ class _CommentsState extends State<Comments> {
                       Text(
                         timeago.format(widget.post!.timestamp!.toDate()),
                         style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.0
-                        ),
+                            fontWeight: FontWeight.w400, fontSize: 12.0),
                       ),
                       SizedBox(width: 3.0),
                       StreamBuilder(
@@ -282,7 +282,8 @@ class _CommentsState extends State<Comments> {
                 children: [
                   CircleAvatar(
                     radius: 20.0,
-                    backgroundImage: CachedNetworkImageProvider(comments.userDp!),
+                    backgroundImage:
+                        CachedNetworkImageProvider(comments.userDp!),
                   ),
                   SizedBox(width: 10.0),
                   Column(
@@ -306,7 +307,7 @@ class _CommentsState extends State<Comments> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 50.0),
-                child: Text( comments.comment!.trim()),
+                child: Text(comments.comment!.trim()),
               ),
               SizedBox(height: 10.0),
             ],

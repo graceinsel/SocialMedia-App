@@ -8,9 +8,22 @@ class PostModel {
   String? username;
   String? location;
   String? description;
+  // TODO(feature): If the post is related to an artwork, set it here.
+  // Case 1: when user upload an artwork to their portfolio, automatically
+  //         create a feed linked to the artwork.
+  // Case 2: ..
+  List<String>? artworkIdList;
+  Timestamp? timestamp;
+
+  // TODO(feature): decide if media is required or not.
+  List<String>? mediaUrlList;
   // change this mediaUrl to a list of media, to support multi image feed.
   String? mediaUrl;
-  Timestamp? timestamp;
+
+  // TODO(feature): repost and share
+
+  // TODO(feature): feature as on linkedin, when user comment or liked a post, an
+  // artwork or a event, make it a news feed.
   
 
   PostModel({
@@ -22,8 +35,11 @@ class PostModel {
     this.description,
     this.mediaUrl,
     this.username,
+    this.artworkIdList,
     this.timestamp,
+    this.mediaUrlList,
   });
+
   PostModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     postId = json['postId'];
@@ -33,7 +49,9 @@ class PostModel {
     username= json['username'];
     description = json['description'];
     mediaUrl = json['mediaUrl'];
+    artworkIdList = json['artworkIdList'];
     timestamp = json['timestamp'];
+    mediaUrlList = json['mediaUrlList'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,8 +63,10 @@ class PostModel {
     data['location'] = this.location;
     data['description'] = this.description;
     data['mediaUrl'] = this.mediaUrl;
+    data['artworkIdList'] = this.artworkIdList;
     data['timestamp'] = this.timestamp;
     data['username'] = this.username;
+    data['mediaUrlList'] = this.mediaUrlList;
     return data;
   }
 }

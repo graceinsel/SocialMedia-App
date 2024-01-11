@@ -1,0 +1,5 @@
+enum RarityType {
+  UNIQUE,
+  LIMITED_EDITION,
+  UNLIMITED_EDITION,
+}
