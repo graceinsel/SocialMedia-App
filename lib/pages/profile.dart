@@ -18,6 +18,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media_app/widgets/userpost.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 import 'package:social_media_app/models/enum/page_type.dart';
+import 'package:social_media_app/widgets/drawer.dart';
 
 class Profile extends StatefulWidget {
   final profileId;
@@ -29,11 +30,13 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   User? user;
   bool isLoading = false;
   int postCount = 0;
   int followersCount = 0;
   // When A follows B and B follows back, we call it a connection.
+  // TODO(feature): add connection check count
   int connectionsCount = 0;
   int followingCount = 0;
   bool isFollowing = false;
@@ -103,100 +106,24 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
             Ionicons.menu_outline,
             size: 24.0,
           ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                // TODO(graceyao): add set drawers instead of opening chats
-                builder: (_) => Chats(),
-              ),
-            );
-          },
+            onPressed: () {
+              scaffoldKey.currentState!.openDrawer(); // Open the drawer
+            }
         ),
         // centerTitle: true,
-        // Log out button
-        // TODO(ui): logout should be moved to the drawers instead of here
-        // TODO(feature): this should be follow button instead of log out
-        // actions: [
-        //   widget.profileId == firebaseAuth.currentUser!.uid
-        //       ? Center(
-        //           child: Padding(
-        //             padding: const EdgeInsets.only(right: 25.0),
-        //             child: GestureDetector(
-        //               onTap: () async {
-        //                 await firebaseAuth.signOut();
-        //                 Navigator.of(context).push(
-        //                   CupertinoPageRoute(
-        //                     builder: (_) => Register(),
-        //                   ),
-        //                 );
-        //               },
-        //               child: Text(
-        //                 'Log Out',
-        //                 style: TextStyle(
-        //                   fontSize: 12.0,
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //         )
-        //       : Center(
-        //           child: Padding(
-        //             padding: const EdgeInsets.only(right: 25.0),
-        //             child: GestureDetector(
-        //               onTap: () async {
-        //                 await firebaseAuth.signOut();
-        //                 Navigator.of(context).push(
-        //                   CupertinoPageRoute(
-        //                     builder: (_) => Register(),
-        //                   ),
-        //                 );
-        //               },
-        //               child: Text(
-        //                 'Log Out',
-        //                 style: TextStyle(
-        //                   fontSize: 12.0,
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //         )
-        // ],
         actions: [
-          widget.profileId != firebaseAuth.currentUser!.uid
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 25.0),
-                    child: GestureDetector(
-                      // TODO(feature): add follow button when current user is not self.
-                      onTap: () async {
-                        await firebaseAuth.signOut();
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (_) => Register(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Follow +',
-                        style: GoogleFonts.robotoSerif(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.0,
-                            letterSpacing: 0.8,
-                            color: Colors.blueGrey),
-                      ),
-                    ),
-                  ),
-                )
-              : Container()
+          // TODO(feature): add follow/unfollow, and edit pencil to the right top
+          // can reuse buildProfileButton below.
         ],
       ),
+      drawer: AppDrawer(),
       body: Column(
         children: <Widget>[
           SizedBox(height: 12.0),
@@ -366,11 +293,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                 body: TabBarView(
                   controller: _tabController,
                   children: [
-                    // TODO(UI): load 5 news post each time when scrolling load next 5.
+                    // TODO(UI): load 5 news post each time when scrolling load next 5. Follow what Feeds does. Better modulize the changes.
                     // TODO(UI): fix scrolling behavior
                     Center(
-                      child:
-                      RefreshIndicator(
+                      child: RefreshIndicator(
                         color: Theme.of(context).colorScheme.secondary,
                         onRefresh: () => postRef
                             .orderBy('timestamp', descending: true)
@@ -385,12 +311,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 height: MediaQuery.of(context).size.height,
                                 child: FutureBuilder(
                                   future: postRef
-                                      .where('ownerId', isEqualTo: widget.profileId)
+                                      .where('ownerId',
+                                          isEqualTo: widget.profileId)
                                       .orderBy('timestamp', descending: true)
                                       .limit(5)
                                       .get(),
-                                  builder:
-                                      (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  builder: (context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (snapshot.hasData) {
                                       var snap = snapshot.data;
                                       List docs = snap!.docs;
@@ -398,13 +325,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                         itemCount: docs.length,
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
-                                          PostModel posts =
-                                          PostModel.fromJson(docs[index].data());
+                                          PostModel posts = PostModel.fromJson(
+                                              docs[index].data());
                                           return Padding(
                                             padding: const EdgeInsets.fromLTRB(
-                                                10.0, 10.0, 10.0, 20.0),
+                                                10.0, 10.0, 10.0, 0.0),
                                             // UserPost is the widget for each post.
-                                            child: UserPost(post: posts, pageType: PageType.PROFILE_PAGE),
+                                            child: UserPost(
+                                                post: posts,
+                                                pageType:
+                                                    PageType.PROFILE_PAGE),
                                           );
                                         },
                                       );
@@ -703,4 +633,3 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     );
   }
 }
-

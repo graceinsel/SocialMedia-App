@@ -35,7 +35,7 @@ class UserPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 12.0),
+      padding: EdgeInsets.only(top: 24.0),
       child: CustomCard(
         onTap: () {},
         borderRadius: BorderRadius.circular(10.0),
@@ -68,50 +68,55 @@ class UserPost extends StatelessWidget {
                           UserModel user = UserModel.fromJson(
                             snapshot.data!.data() as Map<String, dynamic>,
                           );
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // TODO(feature): clicking avatar should go to home page of the user instead of post details.
-                              CircleAvatar(
-                                radius: pageType == PageType.FEEDS_PAGE
-                                    ? 20.0
-                                    : 12.0,
-                                backgroundImage: NetworkImage(user.photoUrl!),
-                              ),
-                              const SizedBox(
-                                  width:
-                                      8.0), // Use const for unchanging widgets
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      pageType == PageType.FEEDS_PAGE
-                                          ? user.username!
-                                          : timeago.format(
-                                              post!.timestamp!.toDate()),
-                                      style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14.0),
-                                    ),
-                                    if (pageType == PageType.FEEDS_PAGE)
-                                      Text(
-                                        timeago
-                                            .format(post!.timestamp!.toDate()),
-                                        style: TextStyle(
-                                            fontSize: 10.0,
-                                            color: Colors.blueGrey.shade700),
-                                      ),
-                                    if (pageType == PageType.FEEDS_PAGE &&
-                                        user.headline != null)
-                                      Text(
-                                        user.headline!,
-                                        style: const TextStyle(fontSize: 10.0),
-                                      ),
-                                  ],
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // TODO(feature): clicking avatar should go to home page of the user instead of post details.
+                                CircleAvatar(
+                                  radius: pageType == PageType.FEEDS_PAGE
+                                      ? 20.0
+                                      : 12.0,
+                                  backgroundImage: NetworkImage(user.photoUrl!),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(
+                                    width:
+                                        8.0), // Use const for unchanging widgets
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        pageType == PageType.FEEDS_PAGE
+                                            ? user.username!
+                                            : timeago.format(
+                                                post!.timestamp!.toDate()),
+                                        style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14.0),
+                                      ),
+                                      if (pageType == PageType.FEEDS_PAGE)
+                                        Text(
+                                          timeago.format(
+                                              post!.timestamp!.toDate()),
+                                          style: TextStyle(
+                                              fontSize: 10.0,
+                                              color: Colors.blueGrey.shade700),
+                                        ),
+                                      if (pageType == PageType.FEEDS_PAGE &&
+                                          user.headline != null)
+                                        Text(
+                                          user.headline!,
+                                          style:
+                                              const TextStyle(fontSize: 10.0),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         }
                         return Container();
@@ -123,7 +128,8 @@ class UserPost extends StatelessWidget {
                       visible: post!.description != null &&
                           post!.description.toString().isNotEmpty,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0, top: 0.0),
+                        padding: const EdgeInsets.only(
+                            left: 20.0, right: 20.0, top: 0.0),
                         child: Text(
                           '${post?.description ?? ""}',
                           style: GoogleFonts.roboto(
@@ -141,7 +147,7 @@ class UserPost extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [

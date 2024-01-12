@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+// TODO(UI): add separator between each CustomCard for news feeds.
 class CustomCard extends StatelessWidget {
   final Widget? child;
   final Function() onTap;
   final BorderRadius? borderRadius;
   final bool elevated;
+  final bool hasDivider;
 
   CustomCard({
     Key? key,
@@ -12,6 +14,7 @@ class CustomCard extends StatelessWidget {
     required this.onTap,
     this.borderRadius,
     this.elevated = true,
+    this.hasDivider = false,
   });
 
   @override
@@ -26,7 +29,8 @@ class CustomCard extends StatelessWidget {
               borderRadius: borderRadius,
               color: Theme.of(context).cardColor,
             ),
-      child: Material(
+      child: Column(
+        children: [Material(
         type: MaterialType.transparency,
         borderRadius: borderRadius,
         child: InkWell(
@@ -35,6 +39,15 @@ class CustomCard extends StatelessWidget {
           child: child,
         ),
       ),
+          Padding(
+              padding: EdgeInsets.only(top: 28.0, bottom: 4.0),
+              child: Container(
+                height: 1.0, // Height of the line
+                color: Colors.blueGrey.shade200, // Color of the line
+                width: MediaQuery.of(context).size.width, // 90% of screen width
+                // width: double.infinity, // Full width line
+              ))]
+    )
     );
   }
 }

@@ -132,7 +132,7 @@ class _CreatePostState extends State<CreatePost> {
               ),
               SizedBox(height: 20.0),
               Text(
-                'Post Caption'.toUpperCase(),
+                'Post Caption * '.toUpperCase(),
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w600,
@@ -151,8 +151,9 @@ class _CreatePostState extends State<CreatePost> {
                 onChanged: (val) => viewModel.setDescription(val),
               ),
               SizedBox(height: 20.0),
+              // TODO(feature): location is not a necessary input.
               Text(
-                'Location'.toUpperCase(),
+                'Location * '.toUpperCase(),
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w600,

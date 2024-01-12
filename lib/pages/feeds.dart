@@ -25,31 +25,74 @@ class Feeds extends StatefulWidget {
 
 class _FeedsState extends State<Feeds> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  int page = 5;
-  bool loadingMore = false;
-  ScrollController scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
   TabController? _tabController;
+  List<PostModel> posts = [];
+  bool isLoadingMore = false;
+  int pageLimit = 5;
+  DocumentSnapshot? lastDocument; // Keeps track of the last document fetched
 
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(() async {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        setState(() {
-          page = page + 5;
-          loadingMore = true;
-        });
-      }
-    });
     _tabController = TabController(length: 4, vsync: this);
+    _scrollController.addListener(_scrollListener);
+    _fetchPosts(); // Initial fetch
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !isLoadingMore) {
+      setState(() {
+        isLoadingMore = true;
+      });
+      _fetchPosts();
+    }
+  }
+
+  Future<void> _fetchPosts() async {
+    if (isLoadingMore) return; // Prevents duplicate fetches
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    QuerySnapshot querySnapshot;
+    if (lastDocument == null) {
+      // Fetching the first batch
+      querySnapshot = await postRef
+          .orderBy('timestamp', descending: true)
+          .limit(pageLimit)
+          .get();
+    } else {
+      // Fetching subsequent batches
+      querySnapshot = await postRef
+          .orderBy('timestamp', descending: true)
+          .startAfterDocument(lastDocument!)
+          .limit(pageLimit)
+          .get();
+    }
+
+    if (querySnapshot.docs.isNotEmpty) {
+      lastDocument = querySnapshot.docs.last;
+      List<PostModel> newPosts = querySnapshot.docs
+          .map((doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      setState(() {
+        posts.addAll(newPosts);
+      });
+    }
+
+    setState(() {
+      isLoadingMore = false;
+    });
   }
 
   @override
   void dispose() {
     _tabController?.dispose();
-    scrollController.dispose();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -109,70 +152,7 @@ class _FeedsState extends State<Feeds> with SingleTickerProviderStateMixin {
         controller: _tabController,
         children: [
           // Replace these with your actual content for each tab
-          Center(
-            child:
-            RefreshIndicator(
-              color: Theme.of(context).colorScheme.secondary,
-              onRefresh: () => postRef
-                  .orderBy('timestamp', descending: true)
-                  .limit(page)
-                  .get(),
-              child: SingleChildScrollView(
-                controller: scrollController,
-                physics: NeverScrollableScrollPhysics(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height,
-                      child: FutureBuilder(
-                        future: postRef
-                            .orderBy('timestamp', descending: true)
-                            .limit(page)
-                            .get(),
-                        builder:
-                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasData) {
-                            var snap = snapshot.data;
-                            List docs = snap!.docs;
-                            // TODO(UI): scroller not working well. Fix the bug.
-                            return ListView.builder(
-                              // controller: scrollController,
-                              itemCount: docs.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                PostModel posts =
-                                PostModel.fromJson(docs[index].data());
-                                return Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      10.0, 10.0, 10.0, 20.0),
-                                  // UserPost is the widget for each post.
-                                  child: UserPost(post: posts),
-                                );
-                              },
-                            );
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return circularProgress(context);
-                          } else
-                            return Center(
-                              child: Text(
-                                'No Feeds',
-                                style: TextStyle(
-                                  fontSize: 26.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          buildPostsTab(),
           Center(child: Text('Explore Content')),
           Center(child: Text('Artwork Content')),
           Center(child: Text('Events Content')),
@@ -182,6 +162,20 @@ class _FeedsState extends State<Feeds> with SingleTickerProviderStateMixin {
     );
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  Widget buildPostsTab() {
+    return ListView.builder(
+      controller: _scrollController,
+      itemCount: posts.length + (isLoadingMore ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index < posts.length) {
+          return UserPost(post: posts[index]); // Your post widget
+        } else {
+          // TODO(bug): fix the indicator issue. When no post left, should show is bottom.
+          return Center(
+              child:
+                  CircularProgressIndicator()); // Loading indicator at the bottom
+        }
+      },
+    );
+  }
 }

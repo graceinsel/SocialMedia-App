@@ -13,6 +13,7 @@ import 'package:social_media_app/services/user_service.dart';
 import 'package:social_media_app/utils/constants.dart';
 import 'package:social_media_app/utils/firebase.dart';
 
+// TODO(feature): make post able to add hashtag.
 class PostsViewModel extends ChangeNotifier {
   //Services
   UserService userService = UserService();
