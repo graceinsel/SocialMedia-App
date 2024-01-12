@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
             home: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: ((BuildContext context, snapshot) {
-                print(snapshot.data);
+                // print(snapshot.data);
                 if (snapshot.hasData) {
                   return TabScreen();
                 } else

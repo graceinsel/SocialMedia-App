@@ -8,7 +8,7 @@ import 'package:social_media_app/utils/firebase.dart';
 import 'package:social_media_app/widgets/indicators.dart';
 import 'package:social_media_app/widgets/userpost.dart';
 import 'package:google_fonts/google_fonts.dart';
-// ... other imports ...
+import 'package:social_media_app/widgets/drawer.dart';
 
 void printDocumentSnapshot(QueryDocumentSnapshot documentSnapshot) {
   // Extract the data directly
@@ -49,13 +49,12 @@ class _FeedsState extends State<Feeds> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _tabController?.dispose();
-    scrollController?.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('feeds build >>>');
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -66,12 +65,7 @@ class _FeedsState extends State<Feeds> with SingleTickerProviderStateMixin {
             size: 24.0,
           ),
           onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (_) => Chats(),
-              ),
-            );
+            scaffoldKey.currentState!.openDrawer(); // Open the drawer
           },
         ),
         title: TabBar(
@@ -110,6 +104,7 @@ class _FeedsState extends State<Feeds> with SingleTickerProviderStateMixin {
           SizedBox(width: 8.0),
         ],
       ),
+      drawer: AppDrawer(),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -141,8 +136,9 @@ class _FeedsState extends State<Feeds> with SingleTickerProviderStateMixin {
                           if (snapshot.hasData) {
                             var snap = snapshot.data;
                             List docs = snap!.docs;
+                            // TODO(UI): scroller not working well. Fix the bug.
                             return ListView.builder(
-                              controller: scrollController,
+                              // controller: scrollController,
                               itemCount: docs.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {

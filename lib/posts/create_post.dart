@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class CreatePost extends StatefulWidget {
 class _CreatePostState extends State<CreatePost> {
   @override
   Widget build(BuildContext context) {
+    print('create post state build function');
     currentUserId() {
       return firebaseAuth.currentUser!.uid;
     }
@@ -45,28 +47,29 @@ class _CreatePostState extends State<CreatePost> {
               children: [
                 Spacer(),
                 StreamBuilder(
-                    stream: usersRef.doc(currentUserId()).snapshots(),
-                    builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        UserModel user = UserModel.fromJson(
-                          snapshot.data!.data() as Map<String, dynamic>,
-                        );
-                        return CircleAvatar(
-                            radius: 16.0,
-                            backgroundImage: NetworkImage(user.photoUrl!),
-                        );
-                      }
-                      return Container();
-                    },
-                  ),
+                  stream: usersRef.doc(currentUserId()).snapshots(),
+                  builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      UserModel user = UserModel.fromJson(
+                        snapshot.data!.data() as Map<String, dynamic>,
+                      );
+                      return CircleAvatar(
+                        radius: 16.0,
+                        backgroundImage: NetworkImage(user.photoUrl!),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
                 Spacer(),
               ],
-              ),
+            ),
             centerTitle: true,
             actions: [
               GestureDetector(
                 onTap: () async {
                   await viewModel.uploadPosts(context);
+                  print(context.toString());
                   Navigator.pop(context);
                   viewModel.resetPost();
                 },
@@ -138,13 +141,12 @@ class _CreatePostState extends State<CreatePost> {
               TextFormField(
                 initialValue: viewModel.description,
                 decoration: InputDecoration(
-                  hintText: 'Eg. This is very beautiful place!',
-                  focusedBorder: UnderlineInputBorder(),
-                  labelStyle: TextStyle(
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w400,
-                  )
-                ),
+                    hintText: 'Eg. This is very beautiful place!',
+                    focusedBorder: UnderlineInputBorder(),
+                    labelStyle: GoogleFonts.roboto(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w400,
+                    )),
                 maxLines: null,
                 onChanged: (val) => viewModel.setDescription(val),
               ),
@@ -197,24 +199,25 @@ class _CreatePostState extends State<CreatePost> {
       ),
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: .6,
+          heightFactor: .5,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              SizedBox(height: 24.0),
+              Center(
                 child: Text(
                   'Select Image',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    color: Theme.of(context).colorScheme.secondary,
+                    // fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               Divider(),
               ListTile(
                 leading: Icon(Ionicons.camera_outline),
-                title: Text('Camera'),
+                title: Text('Camera', style: TextStyle(fontSize: 14.0)),
                 onTap: () {
                   Navigator.pop(context);
                   viewModel.pickImage(camera: true);
@@ -222,7 +225,7 @@ class _CreatePostState extends State<CreatePost> {
               ),
               ListTile(
                 leading: Icon(Ionicons.image),
-                title: Text('Gallery'),
+                title: Text('Gallery', style: TextStyle(fontSize: 14.0)),
                 onTap: () {
                   Navigator.pop(context);
                   viewModel.pickImage();

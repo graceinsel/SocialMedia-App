@@ -95,8 +95,6 @@ class _LoginState extends State<Login> {
   }
 
   buildForm(BuildContext context, LoginViewModel viewModel) {
-    print("login key");
-    print(viewModel.formKey);
     return Form(
       key: viewModel.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,

@@ -90,6 +90,8 @@ class PostsViewModel extends ChangeNotifier {
     loading = true;
     notifyListeners();
     try {
+      // TODO(migration): migrate image picker
+      // TODO(feature): get multiple images.
       PickedFile? pickedFile = await picker.getImage(
         source: camera ? ImageSource.camera : ImageSource.gallery,
       );
