@@ -53,7 +53,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
             onTap: () {
               print('clicked');
             },
-            borderRadius: BorderRadius.circular(40.0),
+            borderRadius: BorderRadius.circular(30.0),
             child: Container(
               child: Theme(
                 data: ThemeData(
@@ -121,7 +121,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
               ),
             ),
           ),
-          SizedBox(height: 5.0),
+          SizedBox(height: 4.0),
           Visibility(
             visible: error != null,
             child: Padding(

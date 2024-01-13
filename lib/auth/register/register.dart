@@ -21,13 +21,12 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     RegisterViewModel viewModel = Provider.of<RegisterViewModel>(context);
-    print('scaffoldKey is');
-    print( viewModel.scaffoldKey);
     return LoadingOverlay(
       progressIndicator: circularProgress(context),
       isLoading: viewModel.loading,
       child: Scaffold(
-        key: viewModel.scaffoldKey,
+        // TODO(bug): was to fix the duplicate key bug, make sure this will not causing new issues.
+        // key: viewModel.scaffoldKey,
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
           children: [
@@ -40,16 +39,17 @@ class _RegisterState extends State<Register> {
                 fontSize: 30.0,
               ),
             ),
+            SizedBox(height: 4.0),
             Text(
-              'Welcome to the new art world',
+              'Welcome to the global professional  art community',
               textAlign: TextAlign.center, // Center text horizontally
               style: GoogleFonts.robotoSerif(
                 fontWeight: FontWeight.w400,
                 color: Colors.blueGrey,
-                fontSize: 14.0,
+                fontSize: 12.0,
               ),
             ),
-            SizedBox(height: 32.0),
+            SizedBox(height: 62.0),
             buildForm(viewModel, context),
             SizedBox(height: 30.0),
             Row(
@@ -83,7 +83,6 @@ class _RegisterState extends State<Register> {
   }
 
   buildForm(RegisterViewModel viewModel, BuildContext context) {
-    print(viewModel.formKey);
     return Form(
       key: viewModel.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -105,7 +104,7 @@ class _RegisterState extends State<Register> {
           PasswordFormBuilder(
             enabled: !viewModel.loading,
             prefix: Ionicons.lock_closed_outline,
-            suffix: Ionicons.eye_outline,
+            suffix: Ionicons.eye_off_outline,
             hintText: "Password",
             textInputAction: TextInputAction.next,
             validateFunction: Validations.validatePassword,
@@ -120,6 +119,7 @@ class _RegisterState extends State<Register> {
           PasswordFormBuilder(
             enabled: !viewModel.loading,
             prefix: Ionicons.lock_open_outline,
+            suffix: Ionicons.eye_off_outline,
             hintText: "Confirm Password",
             textInputAction: TextInputAction.done,
             validateFunction: Validations.validatePassword,

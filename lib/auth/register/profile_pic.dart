@@ -26,11 +26,15 @@ class _ProfilePictureState extends State<ProfilePicture> {
         child: Scaffold(
           key: viewModel.scaffoldKey,
           appBar: AppBar(
-            title: Text('More Details About You',
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: Text('Add more details about you',
               textAlign: TextAlign.center, // Center text horizontally
-              style: GoogleFonts.crimsonText(
+              style: GoogleFonts.robotoSerif(
                 fontWeight: FontWeight.w400,
-                fontSize: 20.0,
+                fontSize: 16.0,
               ),
             ),
             centerTitle: true,
