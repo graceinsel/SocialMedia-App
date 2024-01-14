@@ -191,10 +191,34 @@ class PostsViewModel extends ChangeNotifier {
     }
   }
 
+  uploadProfilePictureAndBio(BuildContext context) async {
+    if (mediaUrl == null) {
+      showInSnackBar('Please select an image', context);
+    } else {
+      try {
+        loading = true;
+        notifyListeners();
+        await postService.uploadProfilePictureAndBio(
+            mediaUrl!, firebaseAuth.currentUser!, bio!);
+        loading = false;
+        Navigator.of(context)
+            .pushReplacement(CupertinoPageRoute(builder: (_) => TabScreen()));
+        notifyListeners();
+      } catch (e) {
+        print(e);
+        loading = false;
+        showInSnackBar('Uploaded successfully!', context);
+        notifyListeners();
+      }
+    }
+  }
+
+
   resetPost() {
     mediaUrl = null;
     description = null;
     location = null;
+    bio = null;
     edit = false;
     notifyListeners();
   }

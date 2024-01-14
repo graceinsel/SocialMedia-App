@@ -20,11 +20,18 @@ class PostService extends Service {
     });
   }
 
+  uploadProfilePictureAndBio(File image, User user, String bio) async {
+    String link = await uploadImage(profilePic, image);
+    var ref = usersRef.doc(user.uid);
+    ref.update({
+      "photoUrl": link,
+      "bio": bio,
+    });
+  }
+
 //uploads post to the post collection
   uploadPost(File image, String location, String description) async {
     String link = await uploadImage(posts, image);
-    print("upload post function after uploadimage");
-    print(link);
     DocumentSnapshot doc =
         await usersRef.doc(firebaseAuth.currentUser!.uid).get();
     user = UserModel.fromJson(

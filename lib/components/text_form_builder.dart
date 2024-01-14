@@ -16,6 +16,9 @@ class TextFormBuilder extends StatefulWidget {
   final Key? key;
   final IconData? prefix;
   final IconData? suffix;
+  final int? maxLines; // Added for multi-line input
+  final int? maxLength;
+  final double borderRadius;// Added to limit the text length
 
   TextFormBuilder(
       {this.prefix,
@@ -33,7 +36,10 @@ class TextFormBuilder extends StatefulWidget {
       this.validateFunction,
       this.onSaved,
       this.onChange,
-      this.key});
+      this.key,
+      this.maxLength,
+      this.maxLines = 1,
+      this.borderRadius = 30.0});
 
   @override
   _TextFormBuilderState createState() => _TextFormBuilderState();
@@ -53,7 +59,7 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
             onTap: () {
               print('clicked');
             },
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(widget.borderRadius),
             child: Container(
               child: Theme(
                 data: ThemeData(
@@ -67,7 +73,9 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
                   initialValue: widget.initialValue,
                   enabled: widget.enabled,
                   onChanged: (val) {
-                    error = widget.validateFunction!(val);
+                    if (widget.validateFunction != null) {
+                      error = widget.validateFunction!(val);
+                    }
                     setState(() {});
                     widget.onSaved!(val);
                   },
@@ -80,7 +88,11 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
                   keyboardType: widget.textInputType,
                   validator: widget.validateFunction,
                   onSaved: (val) {
-                    error = widget.validateFunction!(val);
+
+                    if (widget.validateFunction != null) {
+                      error = widget.validateFunction!(val);
+                    }
+
                     setState(() {});
                     widget.onSaved!(val!);
                   },
@@ -94,27 +106,32 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
                       widget.submitAction!();
                     }
                   },
+                  maxLines:
+                      widget.maxLines ?? 1, // Set maxLines for multi-line input
+                  maxLength: widget.maxLength, // Set maxLength to limit text
                   decoration: InputDecoration(
-                    prefixIcon: Icon(
+                    prefixIcon: widget.prefix != null ? Icon(
                       widget.prefix,
                       size: 15.0,
                       color: Theme.of(context).colorScheme.secondary,
-                    ),
-                    suffixIcon: Icon(
+                    ) : null,
+                    suffixIcon: widget.suffix != null ? Icon(
                       widget.suffix,
                       size: 15.0,
                       color: Theme.of(context).colorScheme.secondary,
-                    ),
+                    ) : null,
                     // fillColor: Colors.white,
                     filled: true,
                     hintText: widget.hintText,
                     hintStyle: TextStyle(
                       color: Colors.grey[400],
                     ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                    border: border(context),
-                    enabledBorder: border(context),
-                    focusedBorder: focusBorder(context),
+                    contentPadding: ((widget.maxLines ?? 1) > 1)
+                        ? EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0)
+                        : EdgeInsets.symmetric(horizontal: 20.0),
+                    border: border(context, widget.borderRadius),
+                    enabledBorder: border(context, widget.borderRadius),
+                    focusedBorder: focusBorder(context, widget.borderRadius),
                     errorStyle: TextStyle(height: 0.0, fontSize: 0.0),
                   ),
                 ),
@@ -140,10 +157,10 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
     );
   }
 
-  border(BuildContext context) {
+  border(BuildContext context, double borderRadius) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.all(
-        Radius.circular(30.0),
+        Radius.circular(borderRadius),
       ),
       borderSide: BorderSide(
         color: Colors.white,
@@ -152,10 +169,10 @@ class _TextFormBuilderState extends State<TextFormBuilder> {
     );
   }
 
-  focusBorder(BuildContext context) {
+  focusBorder(BuildContext context, double borderRadius) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.all(
-        Radius.circular(30.0),
+        Radius.circular(borderRadius),
       ),
       borderSide: BorderSide(
         color: Theme.of(context).colorScheme.secondary,

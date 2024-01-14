@@ -131,6 +131,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
             stream: usersRef.doc(widget.profileId).snapshots(),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData) {
+                print(FirebaseFirestore.instance.collection('users').doc('userId').path);
+                print(widget.profileId);
+                print('debugging');
+                print(snapshot.toString());
+                print(snapshot.data!.exists);
+
+                print(snapshot.data!.data());
                 UserModel user = UserModel.fromJson(
                   snapshot.data!.data() as Map<String, dynamic>,
                 );
