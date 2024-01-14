@@ -38,7 +38,6 @@ class RegisterViewModel extends ChangeNotifier {
             country: country,
           );
           print('success');
-          print(success);
           if (success) {
             Navigator.of(context).pushReplacement(
               CupertinoPageRoute(
@@ -49,7 +48,6 @@ class RegisterViewModel extends ChangeNotifier {
         } catch (e) {
           loading = false;
           notifyListeners();
-          print(e);
           showInSnackBar(
               '${auth.handleFirebaseAuthError(e.toString())}', context);
         }

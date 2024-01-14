@@ -8,6 +8,8 @@ import 'package:social_media_app/widgets/indicators.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media_app/components/text_form_builder.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:social_media_app/screens/mainscreen.dart';
 
 class ProfilePicture extends StatefulWidget {
   @override
@@ -43,6 +45,12 @@ class _ProfilePictureState extends State<ProfilePicture> {
             ),
             centerTitle: true,
             automaticallyImplyLeading: false,
+            actions: [
+              TextButton(onPressed: () {
+                Navigator.of(context)
+                    .pushReplacement(CupertinoPageRoute(builder: (_) => TabScreen()));
+                }, child: Text("Add later"))
+            ],
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
@@ -94,6 +102,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
                 maxLines: 5,
                 maxLength: 200,
                 borderRadius: 5.0,
+                defaultBorderColor: Colors.grey,
               ),
               SizedBox(height: 24.0),
               Center(
@@ -116,7 +125,8 @@ class _ProfilePictureState extends State<ProfilePicture> {
                           style: TextStyle(color: Colors.white)),
                     ),
                   ),
-                  onPressed: () => viewModel.uploadProfilePictureAndBio(context),
+                  onPressed: () =>
+                      viewModel.uploadProfilePictureAndBio(context),
                 ),
               ),
             ],

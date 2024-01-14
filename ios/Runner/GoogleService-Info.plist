@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>622012000537-a2j63j1uhd4a2bbsckb48bqpo87nvmcc.apps.googleusercontent.com</string>
+	<string>480587364232-3jcbtrgt1vubuh65j592qi724mrslfts.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.622012000537-a2j63j1uhd4a2bbsckb48bqpo87nvmcc</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>622012000537-6lffjloi46fsshvs5hd4mk1l83ecv2vu.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.480587364232-3jcbtrgt1vubuh65j592qi724mrslfts</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAr6N2xfqYedPDHe-4m-q6l47nrs5Mx9Gc</string>
+	<string>AIzaSyBhnvL4bNv8AIOc6-PoSTwcJGxUABoHOvg</string>
 	<key>GCM_SENDER_ID</key>
-	<string>622012000537</string>
+	<string>480587364232</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>coms.inselisland.altlas</string>
+	<string>com.artlas.app</string>
 	<key>PROJECT_ID</key>
-	<string>artlasflutter</string>
+	<string>artlasapp2024</string>
 	<key>STORAGE_BUCKET</key>
-	<string>artlasflutter.appspot.com</string>
+	<string>artlasapp2024.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:622012000537:ios:04d1904c9a8bf9ebe63d88</string>
+	<string>1:480587364232:ios:230e57893de244f031ec3d</string>
 </dict>
 </plist>

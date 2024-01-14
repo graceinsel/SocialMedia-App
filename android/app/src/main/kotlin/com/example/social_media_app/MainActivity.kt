@@ -1,4 +1,4 @@
-package com.example.social_media_app
+package com.artlas2024.app
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterFragmentActivity

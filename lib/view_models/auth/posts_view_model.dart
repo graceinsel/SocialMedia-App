@@ -192,14 +192,20 @@ class PostsViewModel extends ChangeNotifier {
   }
 
   uploadProfilePictureAndBio(BuildContext context) async {
+    print('upload profile picture and bio');
     if (mediaUrl == null) {
       showInSnackBar('Please select an image', context);
     } else {
       try {
         loading = true;
         notifyListeners();
+        print('calling postService.uploadProfilePictureAndBio');
+        print(mediaUrl);
+        print(firebaseAuth.currentUser);
+        print(bio);
         await postService.uploadProfilePictureAndBio(
             mediaUrl!, firebaseAuth.currentUser!, bio!);
+        print('done postservice.uploadProfilePictureAndBio');
         loading = false;
         Navigator.of(context)
             .pushReplacement(CupertinoPageRoute(builder: (_) => TabScreen()));
