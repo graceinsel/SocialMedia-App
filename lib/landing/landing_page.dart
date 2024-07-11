@@ -101,14 +101,14 @@ class _LandingState extends State<Landing> {
                 );
               }),
             ),
-            SizedBox(height: 32.0), // Space between dots and Get Started button
+            SizedBox(height: 30.0), // Space between dots and Get Started button
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 0.0,
         child: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 12.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -121,13 +121,12 @@ class _LandingState extends State<Landing> {
                   );
                 },
                 child: Container(
-                  height: 52.0,
-                  width: 230.0,
+                  height: 62.0,
+                  width: 200.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40.0),
                     // border: Border.all(color: Colors.grey),
                     color: Theme.of(context).colorScheme.secondary,
-
                     // gradient: LinearGradient(
                     //   begin: Alignment.topRight,
                     //   end: Alignment.bottomLeft,

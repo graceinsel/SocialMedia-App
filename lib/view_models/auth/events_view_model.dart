@@ -1,0 +1,1 @@
+// EventsViewModel is subclass of PostsViewModel

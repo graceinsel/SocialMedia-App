@@ -13,6 +13,7 @@ import 'package:social_media_app/services/user_service.dart';
 import 'package:social_media_app/utils/constants.dart';
 import 'package:social_media_app/utils/firebase.dart';
 
+// TODO(feature): make post able to add hashtag.
 class PostsViewModel extends ChangeNotifier {
   //Services
   UserService userService = UserService();
@@ -25,6 +26,7 @@ class PostsViewModel extends ChangeNotifier {
   //Variables
   bool loading = false;
   String? username;
+  String? userAvatarUrl;
   File? mediaUrl;
   final picker = ImagePicker();
   String? location;
@@ -52,18 +54,13 @@ class PostsViewModel extends ChangeNotifier {
   }
 
   setPost(PostModel post) {
-    if (post != null) {
-      description = post.description;
-      imgLink = post.mediaUrl;
-      location = post.location;
-      edit = true;
-      edit = false;
-      notifyListeners();
-    } else {
-      edit = false;
-      notifyListeners();
+    description = post.description;
+    imgLink = post.mediaUrl;
+    location = post.location;
+    edit = true;
+    edit = false;
+    notifyListeners();
     }
-  }
 
   setUsername(String val) {
     print('SetName $val');
@@ -94,6 +91,8 @@ class PostsViewModel extends ChangeNotifier {
     loading = true;
     notifyListeners();
     try {
+      // TODO(migration): migrate image picker
+      // TODO(feature): get multiple images.
       PickedFile? pickedFile = await picker.getImage(
         source: camera ? ImageSource.camera : ImageSource.gallery,
       );
@@ -192,10 +191,40 @@ class PostsViewModel extends ChangeNotifier {
     }
   }
 
+  uploadProfilePictureAndBio(BuildContext context) async {
+    print('upload profile picture and bio');
+    if (mediaUrl == null) {
+      showInSnackBar('Please select an image', context);
+    } else {
+      try {
+        loading = true;
+        notifyListeners();
+        print('calling postService.uploadProfilePictureAndBio');
+        print(mediaUrl);
+        print(firebaseAuth.currentUser);
+        print(bio);
+        await postService.uploadProfilePictureAndBio(
+            mediaUrl!, firebaseAuth.currentUser!, bio!);
+        print('done postservice.uploadProfilePictureAndBio');
+        loading = false;
+        Navigator.of(context)
+            .pushReplacement(CupertinoPageRoute(builder: (_) => TabScreen()));
+        notifyListeners();
+      } catch (e) {
+        print(e);
+        loading = false;
+        showInSnackBar('Uploaded successfully!', context);
+        notifyListeners();
+      }
+    }
+  }
+
+
   resetPost() {
     mediaUrl = null;
     description = null;
     location = null;
+    bio = null;
     edit = false;
     notifyListeners();
   }

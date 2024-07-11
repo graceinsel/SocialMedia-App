@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_media_app/posts/story/confrim_status.dart';
 import 'package:social_media_app/view_models/status/status_view_model.dart';
 import '../posts/create_post.dart';
 
@@ -44,39 +43,45 @@ class FabContainer extends StatelessWidget {
     );
   }
 
+  // TODO(UI):make the bottom up better, i.e. glassmorphism
   chooseUpload(BuildContext context, StatusViewModel viewModel) {
     return showModalBottomSheet(
+      useSafeArea: true,
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: .4,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          heightFactor: 0.6,
+          child: ListView(
+            // Wrap the Column with ListView
+            shrinkWrap: true, // Add this line
             children: [
-              SizedBox(height: 20.0),
+              SizedBox(height: 24.0),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14.0, vertical: 4.0),
                 child: Center(
                   child: Text(
-                    'Choose Upload',
+                    'Create',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
               ),
-              Divider(),
+              // Divider(),
               ListTile(
                 leading: Icon(
                   CupertinoIcons.camera_on_rectangle,
                   size: 25.0,
                 ),
-                title: Text('Make a post'),
+                title: Text('Share your thoughts',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w400, fontSize: 14.0)),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).push(
@@ -91,11 +96,25 @@ class FabContainer extends StatelessWidget {
                   CupertinoIcons.camera_on_rectangle,
                   size: 25.0,
                 ),
-                title: Text('Add to story'),
+                title: Text('Add Art Collection',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w400, fontSize: 14.0)),
                 onTap: () async {
                   // Navigator.pop(context);
                   await viewModel.pickImage(context: context);
-
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  CupertinoIcons.camera_on_rectangle,
+                  size: 25.0,
+                ),
+                title: Text('Schedule Event',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w400, fontSize: 14.0)),
+                onTap: () async {
+                  // Navigator.pop(context);
+                  await viewModel.pickImage(context: context);
                 },
               ),
             ],

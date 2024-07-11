@@ -20,6 +20,19 @@ class PostService extends Service {
     });
   }
 
+  uploadProfilePictureAndBio(File image, User user, String bio) async {
+    print('~~~~ uploadProfilePictureAndBio');
+    String link = await uploadImage(profilePic, image);
+    print('~~~ link');
+    var ref = usersRef.doc(user.uid);
+    print('uploadProfilePictureAndBio done');
+    print(ref);
+    ref.update({
+      "photoUrl": link,
+      "bio": bio,
+    });
+  }
+
 //uploads post to the post collection
   uploadPost(File image, String location, String description) async {
     String link = await uploadImage(posts, image);
@@ -36,7 +49,7 @@ class PostService extends Service {
       "ownerId": firebaseAuth.currentUser!.uid,
       "mediaUrl": link,
       "description": description ?? "",
-      "location": location ?? "Wooble",
+      "location": location ?? "ArtLas",
       "timestamp": Timestamp.now(),
     }).catchError((e) {
       print(e);

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/screens/mainscreen.dart';
 import 'package:social_media_app/services/auth_service.dart';
@@ -16,6 +15,8 @@ class LoginViewModel extends ChangeNotifier {
   AuthService auth = AuthService();
 
   login(BuildContext context) async {
+    print(formKey);
+    print(scaffoldKey);
     FormState form = formKey.currentState!;
     form.save();
     if (!form.validate()) {
@@ -32,6 +33,8 @@ class LoginViewModel extends ChangeNotifier {
         );
         print(success);
         if (success) {
+          print('in login_view_model');
+          print(success);
           Navigator.of(context).pushReplacement(
               CupertinoPageRoute(builder: (_) => TabScreen()));
         }
@@ -52,7 +55,9 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
     FormState form = formKey.currentState!;
     form.save();
-    print(Validations.validateEmail(email));
+    // print(Validations.validateEmail(email));
+    print('landing forgot password');
+    print(email);
     if (Validations.validateEmail(email) != null) {
       showInSnackBar('Please input a valid email to reset your password.',context);
     } else {

@@ -1,0 +1,4 @@
+enum SizeUnitType {
+  CM,
+  INCH,
+}

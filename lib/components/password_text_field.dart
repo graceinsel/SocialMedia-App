@@ -30,7 +30,7 @@ class PasswordFormBuilder extends StatefulWidget {
       this.nextFocusNode,
       this.focusNode,
       this.submitAction,
-      this.obscureText = false,
+      this.obscureText = true,
       this.validateFunction,
       this.onSaved,
       this.onChange,
@@ -42,7 +42,7 @@ class PasswordFormBuilder extends StatefulWidget {
 
 class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
   String? error;
-  bool obscureText = false;
+  bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,6 @@ class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
                   ),
                   key: widget.key,
                   controller: widget.controller,
-                  // obscureText: widget.obscureText,
                   obscureText: obscureText,
                   keyboardType: widget.textInputType,
                   validator: widget.validateFunction,
@@ -107,7 +106,7 @@ class _PasswordFormBuilderState extends State<PasswordFormBuilder> {
                         setState(() => obscureText = !obscureText);
                       },
                       child: Icon(
-                        obscureText ? widget.suffix : Ionicons.eye_off_outline,
+                        obscureText ? widget.suffix : Ionicons.eye_outline,
                         size: 15.0,
                         color: Theme.of(context).colorScheme.secondary,
                       ),

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:like_button/like_button.dart';
@@ -27,6 +26,7 @@ currentUserId() {
 
 UserModel? user;
 
+// TODO(graceyao): add support for detailed view of artworks.
 class _ViewImageState extends State<ViewImage> {
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,9 @@ class _ViewImageState extends State<ViewImage> {
         elevation: 0.0,
         color: Colors.transparent,
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(4.0),
           child: Container(
-            height: 50.0,
+            height: 40.0,
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
@@ -53,7 +53,7 @@ class _ViewImageState extends State<ViewImage> {
                       widget.post!.username!,
                       style: TextStyle(fontWeight: FontWeight.w800),
                     ),
-                    SizedBox(height: 3.0),
+                    SizedBox(height: 2.0),
                     Row(
                       children: [
                         Icon(Ionicons.alarm_outline, size: 13.0),

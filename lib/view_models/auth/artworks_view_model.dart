@@ -1,0 +1,1 @@
+// ArtworksViewModel is subclass of PostsViewModel

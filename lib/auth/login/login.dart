@@ -25,7 +25,7 @@ class _LoginState extends State<Login> {
       isLoading: viewModel.loading,
       child: Scaffold(
         backgroundColor: Colors.white,
-        key: viewModel.scaffoldKey,
+        // key: viewModel.scaffoldKey,
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
           children: [
@@ -155,7 +155,7 @@ class _LoginState extends State<Login> {
           Container(
             height: 45.0,
             width: 180.0,
-            child: ElevatedButton(
+            child: FilledButton(
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
